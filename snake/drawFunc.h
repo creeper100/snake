@@ -1,2 +1,2 @@
 #pragma once
-void grid(int xkl, int ykl, HDC hDC, HWND hWnd);
+void cell(int xkl, int ykl, HDC hDC, HWND hWnd, int wight, int height);

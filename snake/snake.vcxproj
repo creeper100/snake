@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="GameWindowClass.h" />
     <ClInclude Include="drawFunc.h" />
+    <ClInclude Include="grid.h" />
     <ClInclude Include="message.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="snake.h" />
@@ -157,9 +158,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameWindowClass.cpp" />
+    <ClCompile Include="grid.cpp" />
     <ClCompile Include="message.cpp" />
     <ClCompile Include="snake.cpp" />
     <ClCompile Include="drawFunc.cpp" />
+    <ClCompile Include="snakec.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

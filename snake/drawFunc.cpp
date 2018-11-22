@@ -1,9 +1,6 @@
 #include "stdafx.h"
-void grid(int xkl, int ykl,HDC hDC,HWND hWnd) {
-	RECT rec;
-	GetClientRect(hWnd, &rec);
-	int wight = rec.right - rec.left;
-	int height = rec.top = rec.bottom;
+void cell(int xkl, int ykl, HDC hDC, HWND hWnd, int wight, int height) {
+	
 	for (int i = 0;i <= xkl;i++) {
 		MoveToEx(hDC, wight / xkl * i, 0, NULL);
 		LineTo(hDC, wight / xkl * i, height);
