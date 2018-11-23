@@ -1,12 +1,16 @@
 #pragma once
 #include "stdafx.h"
-#include "snake.h"
+#include "resource.h"
+#include "GameWindowClass.h"
+#include "message.h"
 #include "drawFunc.h"
 #include "grid.h"
+#include "snake.h"
 extern GameWindowClass mwnd;
-int xkl = 10;
-int ykl = 10;
+int xkl = 30;
+int ykl = 30;
 grid grd;
+snake snk;
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT ps;
@@ -19,9 +23,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case WM_CHAR:
 		switch (char(wParam)) {
 		case 'w':
-			grd.setcell(1, 1, true);
-			
+			snk.goforward();			
 		break;
+		case 's':
+			snk.gobackward();
+			break;
+		case 'a':
+			snk.goleft();
+			break;
+		case 'd':
+			snk.goright();
+			break;
 		}
 		RECT rec;
 		GetClientRect(hWnd, &rec);
@@ -32,6 +44,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		
 		hDC = BeginPaint(hWnd, &ps);
 		SetBkMode(hDC, TRANSPARENT);
+		for (int iks = 0;iks < xkl;iks++)
+			for (int igr = 0;igr < xkl; igr++)
+				grd.setcell(iks, igr, false);
+		for (int i = 0;i < snk.size();i++) {
+			grd.setcell(snk.getx(i), snk.gety(i), true);
+		}
 		HBRUSH hbr = CreateSolidBrush(RGB(0, 0, 0));
 		RECT rec;
 		GetClientRect(hWnd, &rec);
