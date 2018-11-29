@@ -6,33 +6,38 @@
 #include "drawFunc.h"
 #include "grid.h"
 #include "snake.h"
+
 extern GameWindowClass mwnd;
 int xkl = 30;
 int ykl = 30;
+int xe = rand() % xkl;
+int ye = rand() % ykl;
 grid grd;
 snake snk;
+DWORD WINAPI ThreadFunc(LPVOID lpv);
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	PAINTSTRUCT ps;
 	HDC hDC;
 	switch (message)
 	{
+	static HANDLE hreadA;
 	case WM_CREATE:
-	
+		hreadA = CreateThread(NULL, 0, ThreadFunc, NULL, 0, NULL);
 		break;
 		case WM_CHAR:
 		switch (char(wParam)) {
 		case 'w':
-			snk.goforward();			
+			snk.turnforward();			
 		break;
 		case 's':
-			snk.gobackward();
+			snk.turnbackward();
 			break;
 		case 'a':
-			snk.goleft();
+			snk.turnleft();
 			break;
 		case 'd':
-			snk.goright();
+			snk.turnright();
 			break;
 		}
 		RECT rec;
@@ -41,12 +46,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_PAINT:
 	{
-		
+		snk.go();
 		hDC = BeginPaint(hWnd, &ps);
 		SetBkMode(hDC, TRANSPARENT);
 		for (int iks = 0;iks < xkl;iks++)
 			for (int igr = 0;igr < xkl; igr++)
 				grd.setcell(iks, igr, false);
+		if (snk.getx(0) == xe && snk.gety(0) == ye) {
+			snk.eat();
+			xe = rand() % xkl;
+			ye = rand() % ykl;
+		}
+		grd.setcell(xe, ye, true);
 		for (int i = 0;i < snk.size();i++) {
 			grd.setcell(snk.getx(i), snk.gety(i), true);
 		}
@@ -78,4 +89,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return DefWindowProc(hWnd, message, wParam, lParam);
 	}
 	return 0;
+}
+
+DWORD WINAPI ThreadFunc(LPVOID lpv) {
+	HWND hWnd = mwnd.gethwnd();
+	DWORD dwResult = 0;
+	RECT rec;
+	GetClientRect(hWnd, &rec);
+	while (1) {
+		Sleep(1000);
+		InvalidateRect(hWnd, &rec, true);
+	}
+	return dwResult;
 }

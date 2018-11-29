@@ -8,5 +8,6 @@ public:
 	ATOM  MyRegisterClass(HINSTANCE hInstance);
 	BOOL  InitInstance(HINSTANCE,int);
 	HINSTANCE getInst() { return hInst; }
+	HWND gethwnd() { return hWnd; }
 };
 
