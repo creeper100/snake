@@ -47,6 +47,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 	{
 		snk.go();
+		if (snk.hitTest()) {
+			std::wstring out=L"You score: ";
+			wchar_t str[3];
+			swprintf_s(str, L"%d", snk.size());
+			for (unsigned int i = 0;i < sizeof(str)-1;i++)
+				if(str[i]!=0)
+				out.push_back(str[i]);
+				else
+					out.push_back(L' ');
+			MessageBox(hWnd,(LPWSTR)out.c_str(), L"You lose", MB_OK);
+			exit(snk.size());
+		}
 		hDC = BeginPaint(hWnd, &ps);
 		SetBkMode(hDC, TRANSPARENT);
 		for (int iks = 0;iks < xkl;iks++)

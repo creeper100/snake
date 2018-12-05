@@ -89,3 +89,12 @@ void snake::eat() {
 		break;
 	}
 }
+bool snake::hitTest() {
+	if ((tailx[0] >= 30) || (tailx[0] <0) || (taily[0]>=30) || (taily[0] < 0))
+		return true;
+	for (unsigned int i = 1;i < tailx.size();i++)
+		for (unsigned int o= 1;o < taily.size();o++)
+			if (tailx[0] == tailx[i] && taily[0] == taily[i])
+				return true;
+	return false;
+}
