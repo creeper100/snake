@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "snake.h"
-snake::snake()
+snake::snake(int xkl,int ykl)
 {
+	xgr = xkl;
+	ygr = ykl;
 	for (int i = 5;i >=0;i--) {
 		tailx.push_back(5);
 		taily.push_back(i);
@@ -90,7 +92,7 @@ void snake::eat() {
 	}
 }
 bool snake::hitTest() {
-	if ((tailx[0] >= 30) || (tailx[0] <0) || (taily[0]>=30) || (taily[0] < 0))
+	if ((tailx[0] >= xgr) || (tailx[0] <0) || (taily[0]>= ygr) || (taily[0] < 0))
 		return true;
 	for (unsigned int i = 1;i < tailx.size();i++)
 		for (unsigned int o= 1;o < taily.size();o++)

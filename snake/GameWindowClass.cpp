@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "GameWindowClass.h"
 #include "message.h"
+#include "Resource.h"
 
 void GameWindowClass::init(HINSTANCE hInstan,int nCmdShow)
 {
@@ -23,7 +24,7 @@ ATOM GameWindowClass::MyRegisterClass(HINSTANCE hInstance) {
 	wcex.hIcon = NULL;
 	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
-	wcex.lpszMenuName = NULL;
+	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_SNAKE);
 	wcex.lpszClassName = L"w1";
 	wcex.hIconSm = NULL;
 
