@@ -16,8 +16,10 @@ snake snk(xkl, ykl);
 bool isgrid=1;
 bool background = 1;
 bool running = true;
+int speed = 1000;
 DWORD WINAPI ThreadFunc(LPVOID lpv);
 BOOL CALLBACK changesizefunc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
+BOOL CALLBACK changespeedfunc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	grid grd(xkl,ykl);
@@ -34,24 +36,30 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case WM_CHAR:
 		switch (char(wParam)) {
 		case 'w':
+			if(running)
 			snk.turnforward();			
 		break;
 		case 's':
+			if (running)
 			snk.turnbackward();
 			break;
 		case 'a':
+			if (running)
 			snk.turnleft();
 			break;
 		case 'd':
+			if (running)
 			snk.turnright();
 			break;
 		case 'p':
 			running = !running;
 			break;
 		}
-		RECT rec;
-		GetClientRect(hWnd, &rec);
-		InvalidateRect(hWnd, &rec, true);
+		if (running) {
+			RECT rec;
+			GetClientRect(hWnd, &rec);
+			InvalidateRect(hWnd, &rec, true);
+		}
 		break;
 		case WM_COMMAND: {
 			int wmId = LOWORD(wParam);
@@ -81,13 +89,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				snk = snake(xkl, ykl);
 				running = true;
 				break;
+			case ID_SPEED:
+				running = false;
+				DialogBox(mwnd.getInst(), MAKEINTRESOURCE(IDD_CHSPEED), mwnd.gethwnd(), changespeedfunc);
+				//xkl++;
+				//ykl++;
+				grd = grid(xkl, ykl);
+				snk = snake(xkl, ykl);
+				running = true;
+				break;
 			}
 		}
 	case WM_PAINT:
 	{
 		snk.go();
 		if (snk.hitTest()) {
-			snk = snake(xkl, ykl);
 			running = false;
 				std::wstring out=L"You score: ";
 				wchar_t str[3];
@@ -97,6 +113,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					out.push_back(str[i]);
 					else
 						out.push_back(L' ');
+				snk = snake(xkl, ykl);
 			MessageBox(hWnd,(LPWSTR)out.c_str(), L"You lose", MB_OK);
 			running = true;
 		}
@@ -157,7 +174,7 @@ DWORD WINAPI ThreadFunc(LPVOID lpv) {
 	RECT rec;
 	GetClientRect(hWnd, &rec);
 	while (1) {
-			Sleep(1000);
+			Sleep(speed);
 			if (running) {
 			InvalidateRect(hWnd, &rec, true);
 		}
@@ -177,6 +194,29 @@ BOOL CALLBACK changesizefunc(HWND hDlg, UINT uMsg, WPARAM wParam,
 			xkl = GetDlgItemInt(hDlg, IDC_XSIZE, NULL, false);
 			ykl = GetDlgItemInt(hDlg, IDC_XSIZE, NULL, false);
 		}
+			EndDialog(hDlg, 0);
+			return TRUE;
+			break;
+		case IDCANCEL:
+			EndDialog(hDlg, 0);
+			return TRUE;
+			break;
+		}
+	}
+	return FALSE;
+}
+BOOL CALLBACK changespeedfunc(HWND hDlg, UINT uMsg, WPARAM wParam,
+	LPARAM lParam)
+{
+	switch (uMsg) {
+	case WM_INITDIALOG:
+		return TRUE;
+	case WM_COMMAND:
+		switch (LOWORD(wParam)) {
+		case IDOK:
+			if (GetDlgItemInt(hDlg, IDC_SPEEDINP, NULL, false) > 0) {
+				speed = GetDlgItemInt(hDlg, IDC_SPEEDINP, NULL, false);
+			}
 			EndDialog(hDlg, 0);
 			return TRUE;
 			break;
