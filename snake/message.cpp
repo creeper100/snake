@@ -6,7 +6,6 @@
 #include "drawFunc.h"
 #include "grid.h"
 #include "snake.h"
-
 extern GameWindowClass mwnd;
 int xkl = 30;
 int ykl = 30;
@@ -17,6 +16,9 @@ bool isgrid=1;
 bool background = 1;
 bool running = true;
 int speed = 1000;
+int rec=0;
+void loadsettings();
+void savesettings();
 DWORD WINAPI ThreadFunc(LPVOID lpv);
 BOOL CALLBACK changesizefunc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
 BOOL CALLBACK changespeedfunc(HWND hDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -32,6 +34,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 		hreadA = CreateThread(NULL, 0, ThreadFunc, NULL, 0, NULL);
 		mnu = GetMenu(hWnd);
+		loadsettings();
 		break;
 		case WM_CHAR:
 		switch (char(wParam)) {
@@ -105,7 +108,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		snk.go();
 		if (snk.hitTest()) {
 			running = false;
-				std::wstring out=L"You score: ";
+			std::wstring out;
+			if (snk.size() > rec) {
+				out = L"You new score: ";
+				rec = snk.size();
+			}
+				else
+					out = L"You score: ";
 				wchar_t str[3];
 				swprintf_s(str, L"%d", snk.size());
 				for (unsigned int i = 0;i < sizeof(str)-1;i++)
@@ -160,6 +169,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	break;
 	case WM_DESTROY:
+		savesettings();
 		PostQuitMessage(0);
 		break;
 	default:
@@ -227,4 +237,19 @@ BOOL CALLBACK changespeedfunc(HWND hDlg, UINT uMsg, WPARAM wParam,
 		}
 	}
 	return FALSE;
+}
+void loadsettings() {
+	std::ifstream fin;
+	fin.open("snake.conf");
+	fin >> xkl;
+	fin >> ykl;
+	fin >> speed;
+	fin >> background;
+	fin >> isgrid;
+	fin >> rec;
+}
+void savesettings() {
+	std::ofstream fout;
+	fout.open("snake.conf");
+	fout << xkl << std::endl << ykl << std::endl << speed << std::endl << background << std::endl << isgrid << std::endl<<rec<<std::endl;
 }
