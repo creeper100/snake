@@ -1,5 +1,5 @@
 #include "stdafx.h"
-void cell(int xkl, int ykl, HDC hDC, HWND hWnd, int wight, int height) {
+void cell(int xkl, int ykl, HDC hDC, HWND hWnd, double wight, double height) {
 	
 	for (int i = 0;i <= xkl;i++) {
 		MoveToEx(hDC, wight / xkl * i, 0, NULL);

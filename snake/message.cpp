@@ -144,13 +144,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			snk.eat();
 			xe = rand() % xkl;
 			ye = rand() % ykl;
+			for (int i = 0;i < snk.size();i++)
+				if (xe == snk.getx(1) && ye == snk.gety(i)) {
+					i = 0;
+					xe = rand() % xkl;
+					ye = rand() % ykl;
+				}
 		}
 		grd.setcell(xe, ye, true);
 		for (int i = 0;i < snk.size();i++) {
 			grd.setcell(snk.getx(i), snk.gety(i), true);
 		}
-		int wight = rec.right - rec.left;
-		int height = rec.top = rec.bottom;
+		double wight = rec.right - rec.left;
+		double height = rec.top = rec.bottom;
 		if(isgrid)
 		cell(xkl, ykl, hDC, hWnd, wight, height);
 		for (int iks=0;iks<xkl;iks++)
